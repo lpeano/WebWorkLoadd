@@ -4,7 +4,6 @@
 package com.workload;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.LinkedTransferQueue;
 
 /**
@@ -37,11 +36,16 @@ public class asyncLogger extends LinkedTransferQueue<logMessage>{
 	public void put(logMessage LogMessage) {
 			super.put(LogMessage);
 	}
+	
 	public ArrayList<logMessage> getQueued(){
 		ArrayList<logMessage> c = new ArrayList<logMessage>();
 		super.drainTo(c);
 		return c;
 	}
+	
+	public asyncLogger readResolve() {
+	       return getInstance( );
+	    }
 	
 
 }
