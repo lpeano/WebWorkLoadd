@@ -110,15 +110,49 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 	
 	private void do_MULTIWAVE_PATTERN() {
 		// TODO Auto-generated method stub
-			while(true) {
-			
-			this.targetWork.setTags(this.pollingAlgo+"_"+this.Wait_Algorithm+"-"+(1000/this.wavelength));
-			doWork_async(targetWork);
-			Waint_algorithm();
-		}
-		
+		//boolean isCiclic=this.MultiPatterns.isCiclic();
+		this.MultiPatterns.Pattern_Specs.forEach((PatternSpecs  PatterSpec)->{
+			long MaxElapsed =(long) PatterSpec.getElapsed();
+			long elapsed=0;
+			long StartTime=System.currentTimeMillis();
+			SetPatternParameters(PatterSpec);
+			while(elapsed<=MaxElapsed) {
+				this.targetWork.setTags(this.pollingAlgo+"_"+this.Wait_Algorithm+"-"+this.POSITIV+"-"+(1000/this.wavelength));
+				doWork_async(targetWork);
+				Waint_algorithm();
+				elapsed=System.currentTimeMillis()-StartTime;
+		}}
+		);
 	}
 
+	private void SetPatternParameters(PatternSpecs pSpec) {
+		switch(WaitAlgorithm.valueOf(pSpec.getPatternName())){
+		case GEO_ACCELERATE:
+			this.Wait_Algorithm=WaitAlgorithm.GEO_ACCELERATE;
+			this.Start_Time=0;
+			if(!pSpec.getPatternVariable().get("frequency").equals("continue")) {
+				this.frequency=Double.parseDouble(pSpec.getPatternVariable().get("frequency"));
+				this.wavelength=1000/this.frequency;
+			}
+			this.Reason=Long.parseLong(pSpec.getPatternVariable().get("Reason"));
+			this.Stepping=Long.parseLong(pSpec.getPatternVariable().get("Stepping"));
+			this.POSITIV=Boolean.parseBoolean((pSpec.getPatternVariable().get("POSITIV")));
+			this.MAX_FREQ=Double.parseDouble(pSpec.getPatternVariable().get("MaxFrequency"));
+			this.maxEleapsed=Long.parseLong(pSpec.getPatternVariable().get("MaxElapsed"));
+			break;
+		case COSTANT_SPEED:
+			this.Start_Time=0;
+			this.Wait_Algorithm=WaitAlgorithm.COSTANT_SPEED;
+			if(!pSpec.getPatternVariable().get("frequency").equals("continue")) {
+				this.frequency=Double.parseDouble(pSpec.getPatternVariable().get("frequency"));
+				this.wavelength=1000/this.frequency;
+			}
+			break;
+		default:
+			break;
+			
+		}
+	}
 	private void doPolling() {
 		while(true) {
 			this.targetWork.setTags(this.pollingAlgo+"_"+this.Wait_Algorithm+"-"+(1000/this.wavelength));
