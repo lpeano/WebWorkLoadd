@@ -187,6 +187,7 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 								.setPatternName("COSTANT_SPEED")
 								.setPatternVariable("frequency", this.properties.getProperty("MULTIPATTERN_PATTERNS.COSTANT_SPEED."+(i)+".frequency"))
 								.build());
+						
 						break;
 					case GEO_ACCELERATE:
 						/*
