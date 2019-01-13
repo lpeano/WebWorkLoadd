@@ -27,7 +27,7 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 	private long HowMany; 			// How Many Tests
 	PollingAlgorit pollingAlgo;		// Polling Alogrithm
 	WaitAlgorithm Wait_Algorithm;   // Wait Alogrithm
-	WorkerInterface targetWork;            // TargetWork
+	WorkerInterface targetWork;     // TargetWork
 	private String ThreadPoolName;
 	private boolean POSITIV=true;
 	private double MAX_FREQ=100;
@@ -223,42 +223,7 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 					Thread.sleep((long) this.wavelength);
 					break;
 				case GEO_ACCELERATE:
-					/*
-					 * Implementation of Vn=V_0r^(n-1)
-					 * 
-					 * n: stepping in seconds.
-					 * 
-					 */
-					if(this.Start_Time==0) {
-						this.Start_Time=System.currentTimeMillis();
-						this.last=this.Start_Time;
-					} else {
-						if(this.maxEleapsed>(System.currentTimeMillis()-this.Start_Time)){
-							if(System.currentTimeMillis()-this.last>this.Stepping) {
-								this.last=System.currentTimeMillis();
-								this.N++;	
-								this.Moltiplicator=(long)(Math.pow((double) this.Reason,(double)(this.N-1)));
-							
-								if(this.isPOSITIV()) {
-									if(this.frequency*this.Moltiplicator<this.MAX_FREQ) {
-										this.wavelength=(1000/(double)((this.frequency*this.Moltiplicator)));
-									} else {
-										this.wavelength=(1000/(double)((this.MAX_FREQ)));
-									}
-									
-								} else {
-									if((this.frequency/this.Moltiplicator)>this.MAX_FREQ) {
-										this.wavelength=(1000/(double)((this.frequency/this.Moltiplicator)));
-									}else {
-										this.wavelength=(1000/(double)((this.MAX_FREQ)));
-									}
-								}
-								
-								
-							}
-						}
-					}
-					Thread.sleep((long) this.wavelength);
+					GEO_ACCELERATE();
 					break;
 				default:
 					break;
@@ -271,6 +236,45 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 
 	}
 	
+	private void GEO_ACCELERATE() throws InterruptedException {
+		/*
+		 * Implementation of Vn=V_0r^(n-1)
+		 * 
+		 * n: stepping in seconds.
+		 * 
+		 */
+		if(this.Start_Time==0) {
+			this.Start_Time=System.currentTimeMillis();
+			this.last=this.Start_Time;
+		} else {
+			if(this.maxEleapsed>(System.currentTimeMillis()-this.Start_Time)){
+				if(System.currentTimeMillis()-this.last>this.Stepping) {
+					this.last=System.currentTimeMillis();
+					this.N++;	
+					this.Moltiplicator=(long)(Math.pow((double) this.Reason,(double)(this.N-1)));
+				
+					if(this.isPOSITIV()) {
+						if(this.frequency*this.Moltiplicator<this.MAX_FREQ) {
+							this.wavelength=(1000/(double)((this.frequency*this.Moltiplicator)));
+						} else {
+							this.wavelength=(1000/(double)((this.MAX_FREQ)));
+						}
+						
+					} else {
+						if((this.frequency/this.Moltiplicator)>this.MAX_FREQ) {
+							this.wavelength=(1000/(double)((this.frequency/this.Moltiplicator)));
+						}else {
+							this.wavelength=(1000/(double)((this.MAX_FREQ)));
+						}
+					}
+					
+					
+				}
+			}
+		}
+		Thread.sleep((long) this.wavelength);
+
+	}
 	private void doWork_async(WorkerInterface targetWork) {
 		//Thread doW=new Thread(targetWork);
 		this.submit(targetWork);
