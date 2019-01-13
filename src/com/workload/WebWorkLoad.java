@@ -38,10 +38,7 @@ public class WebWorkLoad {
 		ArrayList<worker> ClientThreadsPool=new ArrayList<worker>(Integer.parseInt(Prop.getProperty("clientThreadPoolSize")));
 		ThreadPool ClientsPool=new ThreadPool(Integer.parseInt(Prop.getProperty("clientThreadPoolSize")),"CLient");
 		for(int i=0;i<Integer.parseInt(Prop.getProperty("clientThreadPoolSize"));i++) {
-			//worker Client=new worker(1000,new ClientHTTP(10, 10, "pippo"+i),1000,1000,100,worker.PollingAlgorit.POLLING,worker.WaitAlgorithm.COSTANT_SPEED,"Pool-Client-"+i);
 			worker Client = null;
-			
-			//Client = new worker(frequency,new ClientHTTP(1000, 10000,10000, "http://www.tiscali.it/"),1000,1000,10,worker.PollingAlgorit.POLLING_FIXED_NUMBER,300,worker.WaitAlgorithm.COSTANT_SPEED,"Pool-Client-"+i);
 			frequency=Integer.parseInt(Prop.getProperty("frequency"));
 			String URL=null;
 			int setMillisConnTimeout=0;

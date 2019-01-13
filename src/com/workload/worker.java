@@ -170,27 +170,29 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 	}
 	private void Init_Worker() {
 		// TODO Auto-generated method stub
-		
 		if(this.pollingAlgo==PollingAlgorit.MULTIWAVE_PATTERN) {
 			this.MultiPatterns=new MultiPattern();
 			this.MultiPatterns.setCiclic(true);
-			//String[] multiPatterSequqnce=this.properties.getProperty("MULTIPATTERN_PATTERNS_SEQUENCE").toString().split(" ");
 			List<String> multiPatterSequqnce=Arrays.asList(this.properties.getProperty("MULTIPATTERN_PATTERNS_SEQUENCE").toString().split(" "));
 			AtomicInteger  counter =new AtomicInteger(0);
 			multiPatterSequqnce.forEach((String pattern)->{
 				int i=counter.incrementAndGet();
-				PatternSpecs pspec=null;
 					switch( WaitAlgorithm.valueOf(pattern)) {
 					case COSTANT_SPEED:
-						pspec=new PatternSpecs.Builder()
+						/*
+						 * Init constant speed pattern
+						 */
+						this.MultiPatterns.addPatternSpec(new PatternSpecs.Builder()
 								.setElapsed(Double.parseDouble(this.properties.getProperty("MULTIPATTERN_PATTERNS.COSTANT_SPEED."+(i)+".Elapsed")))
 								.setPatternName("COSTANT_SPEED")
 								.setPatternVariable("frequency", this.properties.getProperty("MULTIPATTERN_PATTERNS.COSTANT_SPEED."+(i)+".frequency"))
-								.build();
-						this.MultiPatterns.addPatternSpec(pspec);
+								.build());
 						break;
 					case GEO_ACCELERATE:
-						pspec=new PatternSpecs.Builder()
+						/*
+						 * Init Geometrica Accelerate pattern
+						 */
+						this.MultiPatterns.addPatternSpec(new PatternSpecs.Builder()
 								.setElapsed(Double.parseDouble(this.properties.getProperty("MULTIPATTERN_PATTERNS.GEO_ACCELERATE."+(i)+".Elapsed")))
 								.setPatternName("GEO_ACCELERATE")
 								.setPatternVariable("frequency", this.properties.getProperty("MULTIPATTERN_PATTERNS.GEO_ACCELERATE."+(i)+".frequency"))
@@ -199,26 +201,18 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 								.setPatternVariable("POSITIV", this.properties.getProperty("MULTIPATTERN_PATTERNS.GEO_ACCELERATE."+(i)+".POSITIV"))
 								.setPatternVariable("MaxFrequency", this.properties.getProperty("MULTIPATTERN_PATTERNS.GEO_ACCELERATE."+(i)+".MaxFrequency"))
 								.setPatternVariable("MaxElapsed", this.properties.getProperty("MULTIPATTERN_PATTERNS.GEO_ACCELERATE."+(i)+".MaxElapsed"))
-								.build();
-						this.MultiPatterns.addPatternSpec(pspec);		
+								.build());		
 						break;
 					default:
 						break;
-						
-						
 					}
-					});
-				
-			
+					});	
 		}
-		
 	}
 
 	private void Waint_algorithm() {
-		
 			try {
-				//LOG.put(new logMessage(0, 0, "Queued :  CompletedTaskCount"+this.getCompletedTaskCount()+" ")));
-				switch(this.Wait_Algorithm) {
+			switch(this.Wait_Algorithm) {
 				case COSTANT_SPEED:
 					Thread.sleep((long) this.wavelength);
 					break;
@@ -228,12 +222,10 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 				default:
 					break;
 				}
-				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 	}
 	
 	private void GEO_ACCELERATE() throws InterruptedException {
@@ -276,9 +268,7 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 
 	}
 	private void doWork_async(WorkerInterface targetWork) {
-		//Thread doW=new Thread(targetWork);
 		this.submit(targetWork);
-		//doW.start();
 	}
 	public String getThreadPoolName() {
 		return ThreadPoolName;
