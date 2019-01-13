@@ -186,8 +186,7 @@ public class worker extends ThreadPoolExecutor implements Runnable {
 								.setElapsed(Double.parseDouble(this.properties.getProperty("MULTIPATTERN_PATTERNS.COSTANT_SPEED."+(i)+".Elapsed")))
 								.setPatternName("COSTANT_SPEED")
 								.setPatternVariable("frequency", this.properties.getProperty("MULTIPATTERN_PATTERNS.COSTANT_SPEED."+(i)+".frequency"))
-								.build());
-						
+								.build());	
 						break;
 					case GEO_ACCELERATE:
 						/*
