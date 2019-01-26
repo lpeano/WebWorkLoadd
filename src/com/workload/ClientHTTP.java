@@ -13,6 +13,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ConnectionBackoffStrategy;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;/*
@@ -115,10 +116,18 @@ public class ClientHTTP  implements WorkerInterface {
 	public ClientHTTP init() {
 		
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-		cm.setMaxTotal(200);
-		cm.setDefaultMaxPerRoute(100);
+		cm.setMaxTotal(100000);
+		cm.setDefaultMaxPerRoute(10000);
 		this.httpclient=HttpClients.custom()
 				.setConnectionManager(cm)
+				.setRetryHandler(new HttpRequestRetryHandler() {
+
+					@Override
+					public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+						// TODO Auto-generated method stub
+						System.out.println(executionCount+" "+exception.getMessage()+" "+context.toString());
+						return false;
+					}})
 				.setKeepAliveStrategy(new org.apache.http.conn.ConnectionKeepAliveStrategy() {
 
 					@Override
