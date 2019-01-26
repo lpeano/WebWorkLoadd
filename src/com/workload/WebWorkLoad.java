@@ -17,7 +17,6 @@ public class WebWorkLoad {
 
 	/**
 	 * @param args
-	 * @throws IOException 
 	 */
 
 	public static void main(String[] args) {

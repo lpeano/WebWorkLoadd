@@ -10,16 +10,21 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import org.apache.http.Header;*/
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ConnectionBackoffStrategy;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;/*
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionPoolTimeoutException;*/
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HttpContext;
 //import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
@@ -78,9 +83,52 @@ public class ClientHTTP  implements WorkerInterface {
             .build();
         httpGet.setConfig(this.requestConfig);
 	}
+    private ConenctionKeepAliveStrategy ConnectionKeepAliveStrategy() {
 
+        public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+            // Honor 'keep-alive' header
+            HeaderElementIterator it = new BasicHeaderElementIterator(
+                    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+            while (it.hasNext()) {
+                HeaderElement he = it.nextElement();
+                String param = he.getName();
+                String value = he.getValue();
+                if (value != null && param.equalsIgnoreCase("timeout")) {
+                    try {
+                        return Long.parseLong(value) * 1000;
+                    } catch(NumberFormatException ignore) {
+                    }
+                }
+            }
+            HttpHost target = (HttpHost) context.getAttribute(
+                    HttpClientContext.HTTP_TARGET_HOST);
+            if ("www.naughty-server.com".equalsIgnoreCase(target.getHostName())) {
+                // Keep alive for 5 seconds only
+                return 5 * 1000;
+            } else {
+                // otherwise keep alive for 30 seconds
+                return 30 * 1000;
+            }
+        }
+
+    }
 	public ClientHTTP init() {
-		this.httpclient=HttpClients.custom().build();
+		
+		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+		cm.setMaxTotal(200);
+		cm.setDefaultMaxPerRoute(100);
+		this.httpclient=HttpClients.custom()
+				.setConnectionManager(cm)
+				.setKeepAliveStrategy(new org.apache.http.conn.ConnectionKeepAliveStrategy() {
+
+					@Override
+					public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+						// TODO Auto-generated method stub
+						return 0;
+					}
+					
+				})
+				.build();
 		if(this.proxy_hosts==null) {
 		 this.requestConfig=RequestConfig.custom()
 		            .setAuthenticationEnabled(true)
@@ -114,6 +162,7 @@ public class ClientHTTP  implements WorkerInterface {
 		String ERROR="";
 		CloseableHttpResponse response = null;
 		try {
+			
 			if(this.GETMethos) {
 				response = this.httpclient.execute(this.httpGet);
 			}
@@ -163,7 +212,6 @@ public class ClientHTTP  implements WorkerInterface {
 		endRead=System.currentTimeMillis();
 		try {
 			EntityUtils.consume(response.getEntity());
-			//this.httpclient.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
