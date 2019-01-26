@@ -2,8 +2,6 @@ package com.workload;
 
 import java.util.ArrayList;
 
-import javax.security.auth.x500.X500Principal;
-
 public class MultiPattern {
 	private boolean ciclic=false;
 	ArrayList<PatternSpecs> Pattern_Specs;

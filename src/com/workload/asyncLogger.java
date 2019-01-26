@@ -23,6 +23,10 @@ public class asyncLogger extends LinkedTransferQueue<logMessage>{
 		super();
 	}
 	
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("javadoc")
 	public static asyncLogger getInstance() {
 		if(instance==null) {
 			synchronized (asyncLogger.class){
@@ -37,6 +41,9 @@ public class asyncLogger extends LinkedTransferQueue<logMessage>{
 			super.put(LogMessage);
 	}
 	
+	/**
+	 * @return
+	 */
 	public ArrayList<logMessage> getQueued(){
 		ArrayList<logMessage> c = new ArrayList<logMessage>();
 		super.drainTo(c);

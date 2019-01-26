@@ -1,5 +1,4 @@
 package com.workload;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,6 +22,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 //import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
+
+import com.workload.api.WorkerInterface;
 
 public class ClientHTTP  implements WorkerInterface {
 	String URL="";

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-
+import com.workload.worker;
 /**
  * @author PeanoLuca
  *
@@ -154,7 +154,7 @@ public class WebWorkLoad {
 			try {
 				
 				System.out.println(""+ClientsPool.getexecutor().isTerminated());
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 				for (worker cp: ClientThreadsPool) {
 					System.out.println("Client                 ID: "+cp.getThreadPoolName());
 					System.out.println("Pooled 		  ActiveCount: "+cp.getActiveCount());

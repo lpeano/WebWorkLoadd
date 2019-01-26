@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import org.apache.http.Header;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.workload.api.WorkerInterface;
+
 /**
  * @author PeanoLuca
  *
