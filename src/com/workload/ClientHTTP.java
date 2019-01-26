@@ -163,6 +163,7 @@ public class ClientHTTP  implements WorkerInterface {
 		endRead=System.currentTimeMillis();
 		try {
 			EntityUtils.consume(response.getEntity());
+			//this.httpclient.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -176,6 +177,9 @@ public class ClientHTTP  implements WorkerInterface {
 		
 	}
 
+	/**
+	 * @return HttpClient
+	 */
 	public CloseableHttpClient getHttpclient() {
 		return httpclient;
 	}
